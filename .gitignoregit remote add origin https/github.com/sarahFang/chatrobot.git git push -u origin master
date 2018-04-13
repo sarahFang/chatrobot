@@ -1,0 +1,64 @@
+# -*- coding: utf-8 -*-
+"""
+Spyder Editor
+
+This is a temporary script file.
+"""
+
+from wxpy import *
+## 在电脑上登录网页版版微信
+bot = Bot()
+#  注册获得个人的图灵机器人key 填入
+tuling = Tuling(api_key='51eaaf2506654ef897088a7755bf1cb5')
+
+# 获取所有好友
+friends = bot.friends()
+# 找到好友
+my_friend = bot.self
+friend2 = bot.friends().search('笨笨')[0]
+friend3 = bot.friends().search('Run')[0]
+friends2 = [friend2,friend3];
+group_name="os"
+# 发送公众号
+my_friend.send_raw_msg(
+    # 名片的原始消息类型
+    raw_type=42,
+    # 注意 `username` 在这里应为微信 ID，且被发送的名片必须为自己的好友
+    raw_content='<msg username="speade" nickname="无敌小笨笨"/>'
+)
+my_friend.send('Hello, WeChat!')
+bot.create_group(friends2, topic=group_name)
+# 获取所有聊天群
+groups = bot.groups()
+# 找到目标群
+group = groups.search(group_name)[0]
+group.send_raw_msg(
+    # 名片的原始消息类型
+    raw_type=42,
+    # 注意 `username` 在这里应为微信 ID，且被发送的名片必须为自己的好友
+    raw_content='<msg username="speade" nickname="无敌小笨笨"/>'
+)
+
+# 消息接收监听器
+@bot.register()
+def print_others(msg):
+    # 输出监听到的消息
+    print(msg)
+    # 回复消息
+    #msg.reply("hello world")
+# 使用图灵机器人自动与指定好友聊天
+@bot.register(my_friend)
+def reply_my_friend(my_friend):
+    print(msg)
+    tuling.do_reply(msg)
+    
+#拉好友入群
+#当好友输入的命令等同于menu_1定义的命令时，机器人自动发送群的邀请给好友，好友点击后可以进入
+def invite(my_friend):
+    #groups = sorted(bot.groups(update=True).search(group_name),key=lambda x: x.name)
+    #sorted用于排序，lambda x:x.name用于群名排序
+    group.add_members(my_friend, use_invitation=True)
+    new_group = bot.create_group(friends, topic="os1")    
+    
+embed()
+
